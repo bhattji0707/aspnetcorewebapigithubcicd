@@ -5,36 +5,27 @@ stages:
   - deploy
 
 variables:
-  DOTNET_VERSION: "6.0"
-  PROJECT_PATH: "./"   # change if needed
   BUILD_OUTPUT: "publish"
-
-before_script:
-  - echo "Using .NET SDK $DOTNET_VERSION"
 
 # 🔷 BUILD
 build_job:
   stage: build
-  image: mcr.microsoft.com/dotnet/sdk:6.0
+  image: mcr.microsoft.com/dotnet/sdk:8.0
   script:
     - dotnet restore
     - dotnet build --configuration Release
-  artifacts:
-    paths:
-      - bin/
-      - obj/
 
 # 🔷 TEST
 test_job:
   stage: test
-  image: mcr.microsoft.com/dotnet/sdk:6.0
+  image: mcr.microsoft.com/dotnet/sdk:8.0
   script:
-    - dotnet test --no-build --verbosity normal
+    - dotnet test --no-build
 
 # 🔷 PUBLISH
 publish_job:
   stage: publish
-  image: mcr.microsoft.com/dotnet/sdk:6.0
+  image: mcr.microsoft.com/dotnet/sdk:8.0
   script:
     - dotnet publish -c Release -o $BUILD_OUTPUT
   artifacts:
@@ -44,11 +35,7 @@ publish_job:
 # 🔷 DEPLOY (DEV)
 deploy_dev:
   stage: deploy
-  environment:
-    name: dev
   script:
-    - echo "Deploying to DEV environment..."
-    # Example: copy files to server (replace with real command)
-    # scp -r $BUILD_OUTPUT/* user@dev-server:/var/www/app
+    - echo "Deploying to DEV..."
   only:
-    - develop   # runs only on dev branch
+    - develop
