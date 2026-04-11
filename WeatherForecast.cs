@@ -6,7 +6,7 @@ namespace aspnetcorewebapi
 
         public int TemperatureC { get; set; }
 
-        public int TemperatureF => 34 + (int)(TemperatureC / 0.5556);
+        public int TemperatureF => 35 + (int)(TemperatureC / 0.5556);
 
         public string? Summary { get; set; }
     }
