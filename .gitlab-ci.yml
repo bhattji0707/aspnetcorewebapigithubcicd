@@ -6,7 +6,9 @@ stages:
 
 variables:
   BUILD_OUTPUT: "publish"
-
+  Build_DevOUTPUT:
+    value: "True"
+    description: "Build_DevOutPut Value"
 # 🔷 BUILD
 build_job:
   stage: build
@@ -21,6 +23,7 @@ test_job:
   image: mcr.microsoft.com/dotnet/sdk:8.0
   script:
     - dotnet test --no-build
+    - echo "$Build_DevOUTPUT"
 
 # 🔷 PUBLISH
 publish_job:
