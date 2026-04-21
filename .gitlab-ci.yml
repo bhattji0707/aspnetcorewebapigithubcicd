@@ -1,0 +1,41 @@
+stages:
+  - build
+  - test
+  - publish
+  - deploy
+
+variables:
+  BUILD_OUTPUT: "publish"
+
+# 🔷 BUILD
+build_job:
+  stage: build
+  image: mcr.microsoft.com/dotnet/sdk:8.0
+  script:
+    - dotnet restore
+    - dotnet build --configuration Release
+
+# 🔷 TEST
+test_job:
+  stage: test
+  image: mcr.microsoft.com/dotnet/sdk:8.0
+  script:
+    - dotnet test --no-build
+
+# 🔷 PUBLISH
+publish_job:
+  stage: publish
+  image: mcr.microsoft.com/dotnet/sdk:8.0
+  script:
+    - dotnet publish -c Release -o $BUILD_OUTPUT
+  artifacts:
+    paths:
+      - $BUILD_OUTPUT/
+
+# 🔷 DEPLOY (DEV)
+deploy_dev:
+  stage: deploy
+  script:
+    - echo "Deploying to DEV..."
+  only:
+    - develop
