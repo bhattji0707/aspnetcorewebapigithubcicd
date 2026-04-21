@@ -8,20 +8,33 @@ namespace aspnetcorewebapi
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
-            builder.Services.AddHsts(hsts =>
+            // Add CORS
+            builder.Services.AddCors(options =>
             {
-                hsts.MaxAge = TimeSpan.FromDays(1);
+                options.AddPolicy("AllowAngular",
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:4200")
+                              .AllowAnyHeader()
+                              .AllowAnyMethod();
+                    });
             });
+            builder.Services.AddControllers();
+
+            
+            //builder.Services.AddHsts(hsts =>
+            //{
+            //    hsts.MaxAge = TimeSpan.FromDays(1);
+            //});
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
 
-            app.UseHsts();
-            app.UseHttpsRedirection();
-            
+            //app.UseHsts();
+            //app.UseHttpsRedirection();
 
+            app.UseCors("AllowAngular");
             app.UseAuthorization();
 
 
